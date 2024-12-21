@@ -5,50 +5,58 @@ class Node {
         int data;
         Node* left;
         Node* right;
-        Node(int value) : data(value), left(nullptr), right(nullptr) {};
+        Node(int value) : data(value), left(nullptr), right(nullptr) {}
 };
 
-Node* searchNodeValue(Node* head, const int& value){
-    if (head == nullptr){
-        throw std::runtime_error("Head node is null and value cannot be found");
+Node* searchNodeValue(Node* head, const int& value) {
+    if (head == nullptr) {
         return nullptr;
     }
-    while(head != nullptr){
+    while (head != nullptr) {
         if (head->data == value) {
             return head;
-        } else if (head->data > value){
+        } else if (head->data > value) {
             head = head->left;
-        } else if (head->data < value){
+        } else if (head->data < value) {
             head = head->right;
         }
     }
-    if (head == nullptr){
-        throw std::runtime_error("Could not find value in binary search tree");
-        return nullptr;
-    }
+    return nullptr;
 }
 
-int main(void){
-    Node* head = new Node(10);
-    Node* a = new Node(8);
-    Node* b = new Node(6);
-    Node* c = new Node(4);
-    Node* d = new Node(12);
-    Node* e = new Node(11);
-    head->left = a;
-    head->right = e;
-    a->left = b;
-    a->right = e;
-    b->left = c;
-    b->right = a;
-    e->left = head;
-    e->right = d;
 
-    try {
-        Node* result = searchNodeValue(head,12);
-        std::cout << "result: " << result->data << std::endl;
-    } catch (const std::exception& e){
-        std::cerr << "Error: " << e.what() << std::endl;
+Node* insertNode(Node* head, const int& value) {
+    if (head == nullptr) {
+        return new Node(value);
     }
+    if (value < head->data) {
+        head->left = insertNode(head->left, value);
+    } else if (value > head->data) {
+        head->right = insertNode(head->right, value);
+    }
+    return head;
+}
 
+
+int main() {
+
+    Node* head = nullptr;
+    head = insertNode(head, 10);
+    head = insertNode(head, 8);
+    head = insertNode(head, 12);
+    head = insertNode(head, 6);
+    head = insertNode(head, 11);
+    head = insertNode(head, 4);
+
+    Node* result1 = searchNodeValue(head, 12);
+    std::cout << ((result1 != nullptr)? "Found node with value: " : "Not found brotha") << result1->data << std::endl;
+
+    Node* result2 = searchNodeValue(head, 8);
+    std::cout << ((result2 != nullptr)? "Found node with value: " : "Not found brotha") << result2->data << std::endl;
+
+    Node* result3 = searchNodeValue(head, 13);
+    std::cout << ((result3 != nullptr)? "Found node with value: " : "Not found brotha") << std::endl;
+
+
+    return 0;
 }
